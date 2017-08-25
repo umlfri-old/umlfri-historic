@@ -10,7 +10,6 @@
             <Option value="public" />
             <Option value="private" />
             <Option value="protected" />
-            <Option value="package" />
         </Item>
         <Item value="Attributes" type="attrs" propid="attributes" />
         <Item value="Operations" type="opers" propid="operations" />

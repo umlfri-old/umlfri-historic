@@ -496,9 +496,9 @@
 			  <property name="above_child">False</property>
 			  <signal name="button_press_event" handler="on_picEventBox_button_press_event" last_modification_time="Mon, 05 Jun 2006 20:03:36 GMT"/>
 			  <signal name="scroll_event" handler="on_picEventBox_scroll_event" last_modification_time="Tue, 06 Jun 2006 13:09:41 GMT"/>
+			  <signal name="drag_begin" handler="on_picEventBox_drag_begin" last_modification_time="Tue, 06 Jun 2006 16:10:06 GMT"/>
 			  <signal name="drag_motion" handler="on_picEventBox_drag_motion" last_modification_time="Tue, 06 Jun 2006 16:38:57 GMT"/>
 			  <signal name="drag_drop" handler="on_picEventBox_drag_drop" last_modification_time="Tue, 06 Jun 2006 16:44:33 GMT"/>
-			  <signal name="drag_end" handler="on_picEventBox_drag_end" last_modification_time="Tue, 06 Jun 2006 20:04:57 GMT"/>
 
 			  <child>
 			    <widget class="GtkDrawingArea" id="picDrawingArea">

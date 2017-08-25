@@ -22,7 +22,7 @@
                             <TextBox align="left" text="#name" color="yellow" />
                         </Padding>
                     </Rectangle>
-                    <Padding padding="15" />
+                    <Padding padding="8" />
                 </VBox>
                 <Rectangle fill="lightpink2" border="black">
                     <Padding padding="40" />

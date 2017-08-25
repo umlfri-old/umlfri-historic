@@ -50,6 +50,11 @@ conObj = lib.Connections.CConnectionObject(ass)
 conObj.SetAttribute('Name', 'conn')
 conect = lib.Drawing.CConnection(draare,conObj,[(120,165),(25,25),(60,60),(60,80)])
 
+clas.Select()
+# pack.Select()
+# conect.Select()
+clas.Deselect()
+
 def clicked(widget, event):
     #print conect.AreYouAtPosition(event.x, event.y)
     print draare.GetElementAtPosition(event.x, event.y)

@@ -2,8 +2,6 @@ import gtk, gtk.gdk, gobject
 
 import common
 
-from lib.consts import SELECT_SQUARE_COLOR, SELECT_SQUARE_SIZE
-
 from lib.Glade import CWidget
 from lib.Drawing import CDrawingArea, CElement, CConnection
 
@@ -11,8 +9,6 @@ from lib.Drawing import CDrawingArea, CElement, CConnection
 from lib.Elements import CElementObject
 from lib.Connections import CConnectionObject
 #^odstranit^ ???
-
-targets = [('document/uml', 0, gtk.TARGET_SAME_WIDGET)]
 
 class CpicDrawingArea(CWidget):
     widgets = ('picDrawingArea', 'picEventBox', 'picVBar', 'picHBar')
@@ -24,11 +20,10 @@ class CpicDrawingArea(CWidget):
             (gobject.TYPE_OBJECT, )), 
 
     }
-    dnd = False
     
     def Init(self):
-        #self.picEventBox.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_MOVE)
-        self.picEventBox.drag_dest_set(gtk.DEST_DEFAULT_ALL, targets, gtk.gdk.ACTION_MOVE)
+        self.picEventBox.drag_source_set(gtk.gdk.BUTTON1_MASK, [('document/uml', 0, gtk.TARGET_SAME_WIDGET)], gtk.gdk.ACTION_MOVE)
+        self.picEventBox.drag_dest_set(gtk.DEST_DEFAULT_ALL, [('document/uml', 0, gtk.TARGET_SAME_WIDGET)], gtk.gdk.ACTION_MOVE)
         self.Buffer = gtk.gdk.Pixmap(self.picDrawingArea.window, 1000, 1000)
         self.DrawingArea = CDrawingArea(self.picDrawingArea, self.Buffer)
         #self.picVBar.set_property('fixed_slider_length', False)
@@ -38,7 +33,6 @@ class CpicDrawingArea(CWidget):
         self.Paint()
         #tmp = (1,2,3), (10,3,5)
         #tmp = [max(i) for i in zip(*tmp)]
-        
         
     def GetDrawingArea(self):
         return self.picDrawingArea
@@ -54,9 +48,6 @@ class CpicDrawingArea(CWidget):
     def GetAbsolutePos(self, posx, posy):
         return int(self.picHBar.get_value() + posx), int(self.picVBar.get_value() + posy)
         
-    def GetRelativePos(self, posx, posy):
-        return int(-self.picHBar.get_value() + posx), int(-self.picVBar.get_value() + posy)
-        
     def Paint(self):
         self.DrawingArea.Paint()
         self.Repaint()
@@ -67,8 +58,6 @@ class CpicDrawingArea(CWidget):
         wgt = self.picDrawingArea.window
         gc = wgt.new_gc()
         wgt.draw_drawable(gc, self.Buffer, posx, posy, 0, 0, sizx, sizy)
-        if self.dnd:
-            self.__DrawDragRect(0,0, True, False)
         
     def AdjustScrollBars(self):
         dasx, dasy = self.GetDrawingAreaSize()
@@ -90,32 +79,26 @@ class CpicDrawingArea(CWidget):
         if toolBtnSel is None:
             itemSel = self.DrawingArea.GetElementAtPosition(posx, posy)
             if itemSel is not None:
-                if itemSel in self.DrawingArea.GetSelected():
-                    if (event.state & gtk.gdk.CONTROL_MASK):
-                        self.DrawingArea.RemoveFromSelection(itemSel)
-                        self.Paint()
-                    elif event.button == 1:
-                        self.__DragBegin(event)
-                    else:
-                        self.Paint()
-                elif not (event.state & gtk.gdk.CONTROL_MASK):
+                if not (event.state & gtk.gdk.CONTROL_MASK):
                     self.DrawingArea.DeselectAll()
                     self.DrawingArea.AddToSelection(itemSel)
-                    if event.button == 1:
-                        self.__DragBegin(event)
-                    else:
-                        self.Paint()
+                elif itemSel in self.DrawingArea.GetSelected():
+                    self.DrawingArea.RemoveFromSelection(itemSel)
                 else:
                     self.DrawingArea.AddToSelection(itemSel)
-                    self.Paint()
+                self.Paint()
             elif self.DrawingArea.SelectedCount() > 0:
+                print "2",
                 if not (event.state & gtk.gdk.CONTROL_MASK):
                     self.DrawingArea.DeselectAll()
                     self.Paint()
+                    
+            print self.DrawingArea.GetSelectSquare()
         
         elif toolBtnSel[0] == 'Element':
             ElementType = self.application.ElementFactory.GetElement(toolBtnSel[1])
             ElementObject = CElementObject(ElementType)
+            CElement(self.DrawingArea, ElementObject).SetPosition(posx, posy)
             CElement(self.DrawingArea, ElementObject).SetPosition(posx, posy)
             self.emit('set_selected', common.SelectedMessage(None))
             self.Paint()
@@ -150,18 +133,15 @@ class CpicDrawingArea(CWidget):
         else:
             self.__Scroll(self.picVBar, event.direction)
         self.Repaint()
-           
+        
+    def on_picEventBox_drag_begin(self, widget, context):
+        print 'begin'
+    
     def on_picEventBox_drag_motion(self, widget, context, x, y, time):
-        self.__DrawDragRect(x,y)
+        print 'motion', x, y
     
     def on_picEventBox_drag_drop(self, widget, context, x, y, time):
-        dx, dy = self.__GetDelta(x, y)
-        self.DrawingArea.MoveSelection(dx, dy)
         print 'drop', x, y
-        
-    def on_picEventBox_drag_end(self, widget, context):
-        self.dnd = False
-        self.Paint()
         
     def __Scroll(self, scrollbar, direction):
         tmp = scrollbar.get_adjustment()
@@ -171,38 +151,4 @@ class CpicDrawingArea(CWidget):
             tmp.value = min(tmp.upper - tmp.page_size, tmp.value + 10)
         scrollbar.set_adjustment(tmp)
         
-    def __DragBegin(self, event):
-        self.picEventBox.drag_begin(targets, gtk.gdk.ACTION_MOVE, event.button, event)
-        self.DragStartPos = self.GetAbsolutePos(event.x, event.y)
-        self.DragRect = self.DrawingArea.GetSelectSquare()
-        cmap = self.picDrawingArea.window.get_colormap()
-        self.DragGC = self.picDrawingArea.window.new_gc(foreground = cmap.alloc_color(SELECT_SQUARE_COLOR), 
-            function = gtk.gdk.XOR, line_width = SELECT_SQUARE_SIZE)
-        self.__DrawDragRect(event.x, event.y, False)
-        self.dnd = True
         
-    def  __GetDelta(self, x, y):
-        sizx, sizy = self.GetDrawingAreaSize()
-        selx, sely = self.DragRect[1]
-        sizx, sizy = sizx - selx, sizy - sely
-        tmpx, tmpy = self.GetAbsolutePos(x,y)
-        #print tmpx, tmpy,
-        #tmpx = min(max(0, tmpx), sizx)
-        #tmpy = min(max(0, tmpy), sizy)
-        #print tmpx, tmpy
-        dx, dy = tmpx - self.DragStartPos[0], tmpy - self.DragStartPos[1]
-        posx, posy = self.DragRect[0]
-        tmpx, tmpy = posx + dx, posy + dy
-        tmpx = min(max(0, tmpx), sizx)
-        tmpy = min(max(0, tmpy), sizy)
-        return tmpx - posx, tmpy - posy
-        
-    
-    def __DrawDragRect(self, x, y, erase = True, draw = True):
-        if erase:
-            self.picDrawingArea.window.draw_rectangle(self.DragGC, False, self.__oldx, self.__oldy, *self.DragRect[1])
-        if draw:
-            tmpx, tmpy = self.GetRelativePos(*self.DragRect[0])
-            dx, dy = self.__GetDelta(x, y)
-            self.picDrawingArea.window.draw_rectangle(self.DragGC, False, int(tmpx + dx), int(tmpy + dy), *self.DragRect[1])
-            self.__oldx, self.__oldy = int(tmpx + dx), int(tmpy + dy)

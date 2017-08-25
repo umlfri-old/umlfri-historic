@@ -8,6 +8,7 @@ from tbToolBox import CtbToolBox
 from twProjectView import CtwProjectView
 from mnuItems import CmnuItems
 from picDrawingArea import CpicDrawingArea
+from lwProperties import ClwProperties
 
 class CfrmMain(lib.Glade.CWindow):
     name = 'frmMain'
@@ -17,7 +18,8 @@ class CfrmMain(lib.Glade.CWindow):
         'tbToolBox': CtbToolBox, 
         'twProjectView': CtwProjectView,
         'mnuItems': CmnuItems,
-        'picDrawingArea': CpicDrawingArea, 
+        'picDrawingArea': CpicDrawingArea,
+        'lwProperties': ClwProperties,
         }
     
     def Init(self):
