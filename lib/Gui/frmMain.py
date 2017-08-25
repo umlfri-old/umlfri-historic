@@ -64,12 +64,7 @@ class CfrmMain(common.CWindow):
         
     # Diagrams
     def on_mnuViewTools_activate(self, mnu):
-        # self.tbTools.set_child_visible(mnu.get_active())
-        if mnu.get_active():
-            self.hboxWorkSpace.pack_start(self.tbToolBox.GetToolBox(), expand=False, fill=False)
-            self.hboxWorkSpace.reorder_child(self.tbToolBox.GetToolBox(), 0)
-        else:
-            self.hboxWorkSpace.remove(self.tbToolBox.GetToolBox())
+        self.tbToolBox.SetVisible(mnu.get_active())
             
     # View
     def on_mnuClassDiahram_activate(self, mnu):

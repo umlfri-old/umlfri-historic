@@ -27,7 +27,7 @@
                         <HBox>
                             <Loop collection="attributes">
                                 <VBox>
-                                    <TextBox align="left" text="@type" />
+                                    <TextBox align="left" text="@scope" />
                                     <TextBox align="left" text="@line" />
                                 </VBox>
                             </Loop>
@@ -40,7 +40,7 @@
                                 <HBox>
                                     <Loop collection="operations">
                                         <VBox>
-                                            <TextBox align="left" text="@type" />
+                                            <TextBox align="left" text="@scope" />
                                             <TextBox align="left" text="@line" />
                                         </VBox>
                                     </Loop>

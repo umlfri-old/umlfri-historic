@@ -109,9 +109,9 @@ class ClwProperties(CWidget):
         iter = model.get_iter_from_string(path)
         type, = model.get(iter, ID_TYPE)
         if type == 'attrs':
-            print 'attrs'
+            self.application.GetWindow('frmProperties').ShowProperties('attrs',self.element)
         elif type == 'opers':
-            print 'opers'
+            self.application.GetWindow('frmProperties').ShowProperties('opers',self.element)
         
         
         

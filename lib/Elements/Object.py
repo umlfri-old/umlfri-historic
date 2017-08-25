@@ -41,10 +41,50 @@ class CElementObject:
     
     def GetAttributes(self):
         return self.attribs
-            
         
     def GetVisualProperty(self, key):
-        return self.attribs[self.type.GetVisAttr(key)]
+        attr = self.type.GetVisAttr(key)
+        type = self.type.GetAttribute(attr)
+        val = self.attribs[attr]
+        if type[0] == 'attrs':
+            v = []
+            for i in val:
+                s = ''
+                o = {}
+                if vi['scope'] == 'private':
+                    o['scope'] = '-'
+                elif vi['scope'] == 'public':
+                    o['scope'] = '+'
+                elif vi['scope'] == 'protected':
+                    o['scope'] = '#'
+                l = vi['name']
+                if 'type' in vi and vi['type']:
+                    l += ": "+vi['type']
+                if 'initial' in vi and vi['initial']:
+                    l += " = "+vi['initial']
+                o['line'] = l
+                v.append(o)
+            val = v
+        elif type[0] == 'opers':
+            v = []
+            for i in val:
+                s = ''
+                o = {}
+                if vi['scope'] == 'private':
+                    o['scope'] = '-'
+                elif vi['scope'] == 'public':
+                    o['scope'] = '+'
+                elif vi['scope'] == 'protected':
+                    o['scope'] = '#'
+                l = vi['name']
+                if 'parameters' in vi and vi['parameters']:
+                    l += "("+vi['parameters']+")"
+                if 'type' in vi and vi['type']:
+                    l += ": "+vi['type']
+                o['line'] = l
+                v.append(o)
+            val = v
+        return val
 
     def Paint(self, element):
         self.type.Paint(element)

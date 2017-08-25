@@ -8,3 +8,6 @@ class CWidget(gobject.GObject):
     
     def Init(self):
         pass
+    
+    def Init2(self):
+        pass

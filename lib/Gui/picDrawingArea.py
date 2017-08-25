@@ -102,16 +102,18 @@ class CpicDrawingArea(CWidget):
                 elif not (event.state & gtk.gdk.CONTROL_MASK):
                     self.DrawingArea.DeselectAll()
                     self.DrawingArea.AddToSelection(itemSel)
+                    self.emit('selected_item', itemSel)
                     if event.button == 1:
-                        self.emit('selected_item', itemSel)
                         self.__DragBegin(event)
                     self.Paint()
                 else:
                     self.DrawingArea.AddToSelection(itemSel)
+                    self.emit('selected_item', None)
                     self.Paint()
             elif self.DrawingArea.SelectedCount() > 0:
                 if not (event.state & gtk.gdk.CONTROL_MASK):
                     self.DrawingArea.DeselectAll()
+                    self.emit('selected_item', None)
                     self.Paint()
         
         elif toolBtnSel[0] == 'Element':

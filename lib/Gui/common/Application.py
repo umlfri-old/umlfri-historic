@@ -19,9 +19,11 @@ class CApplication:
                 for widgetName in wgt.widgets:
                     setattr(wgt, widgetName, self.wTree.get_widget(widgetName))
                 self.wTree.signal_autoconnect(wgt)
+                wgt.Init2()
                 wgt.Init()
             tmp.form = self.wTree.get_widget(i.name)
             self.wTree.signal_autoconnect(tmp)
+            tmp.Init2()
             tmp.Init()
     
     def GetWindow(self, name):
