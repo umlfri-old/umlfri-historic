@@ -22,9 +22,9 @@ class CElementFactory:
         dom = xml.dom.minidom.parse(file_path)
         root = dom.documentElement
         if root.tagName != 'ElementType':
-            raise UMLException("XMLError")
+            raise UMLException("XMLError", root.tagName)
         if not root.hasAttribute('id'):
-            raise UMLException("XMLError")
+            raise UMLException("XMLError", ('ElementType', 'id'))
         obj = CElementType(root.getAttribute('id'))
         
         for i in root.childNodes:
@@ -33,16 +33,16 @@ class CElementFactory:
             en = i.tagName
             if en == 'Icon':
                 if not i.hasAttribute('path'):
-                    raise UMLException("XMLError")
+                    raise UMLException("XMLError", ('Icon', 'path'))
                 obj.SetIcon(pixbuf_new_from_file(i.getAttribute('path')))
             elif en == 'Connections':
                 for item in i.childNodes:
                     if item.nodeType not in (xml.dom.minidom.Node.ELEMENT_NODE, xml.dom.minidom.Node.DOCUMENT_NODE):
                         continue
                     if item.tagName != 'Item':
-                        raise UMLException("XMLError")
+                        raise UMLException("XMLError", item.tagName)
                     if not item.hasAttribute('value'):
-                        raise UMLException("XMLError")
+                        raise UMLException("XMLError", ('Item', 'value'))
                     value = item.getAttribute('value')
                     with_what = None
                     allow_recursive = False
@@ -56,15 +56,15 @@ class CElementFactory:
                     if item.nodeType not in (xml.dom.minidom.Node.ELEMENT_NODE, xml.dom.minidom.Node.DOCUMENT_NODE):
                         continue
                     if item.tagName != 'Item':
-                        raise UMLException("XMLError")
+                        raise UMLException("XMLError", item.tagName)
                     if not item.hasAttribute('value'):
-                        raise UMLException("XMLError")
+                        raise UMLException("XMLError", ('Item', 'value'))
                     value = item.getAttribute('value')
                     if not item.hasAttribute('type'):
-                        raise UMLException("XMLError")
+                        raise UMLException("XMLError", ('Item', 'type'))
                     type = item.getAttribute('type')
                     propid = None
-                    options = None
+                    options = []
                     if item.hasAttribute('propid'):
                         propid = item.getAttribute('propid')
                     if item.hasChildNodes():
@@ -72,8 +72,10 @@ class CElementFactory:
                         for opt in item.childNodes:
                             if opt.nodeType not in (xml.dom.minidom.Node.ELEMENT_NODE, xml.dom.minidom.Node.DOCUMENT_NODE):
                                 continue
+                            if opt.tagName != 'Option':
+                                raise UMLException("XMLError", opt.tagName)
                             if not opt.hasAttribute('value'):
-                                raise UMLException("XMLError")
+                                raise UMLException("XMLError", ('Option', 'value'))
                             options.append(opt.getAttribute('value'))
                     obj.AppendAttribute(value, type, propid, options)
             elif en == 'Appearance':
@@ -81,15 +83,17 @@ class CElementFactory:
                 for j in i.childNodes:
                     if j.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
                         if tmp is not None:
-                            raise UMLException("XMLError")
+                            raise UMLException("XMLError", 'Appearance')
                         tmp = j
                 obj.SetAppearance(self.__LoadAppearance(tmp))
+            else:
+                raise UMLException('XMLError', en)
         
         self.types[root.getAttribute('id')] = obj
     
     def __LoadAppearance(self, root):
         if root.tagName not in ALL:
-            raise UMLException("XMLError")
+            raise UMLException("XMLError", root.tagName)
         cls = ALL[root.tagName]
         params = {}
         for i in root.attributes.values():

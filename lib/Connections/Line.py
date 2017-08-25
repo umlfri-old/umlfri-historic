@@ -21,7 +21,7 @@ class CConnectionLine(object):
         return self.width
 
     def Paint(self, x1, y1, x2, y2, Connection):
-        wgt = Connection.GetDrawingArea().GetWidget().window
+        wgt = Connection.GetDrawingArea().GetDrawable()
         cmap = wgt.get_colormap()
         gc = wgt.new_gc(foreground = cmap.alloc_color(self.color),  line_width = self.width, line_style = LINE_STYLES[self.style])
         wgt.draw_line(gc, x1, y1, x2, y2)

@@ -12,7 +12,7 @@ class CCondition(CSimpleContainer):
     def __IsTrue(self, element):
         ret = True
         if self.type == 'empty':
-            if element.GetElementObject().GetVisualProperty(self.condition):
+            if element.GetObject().GetVisualProperty(self.condition):
                 ret = False
             else:
                 ret = True
@@ -42,7 +42,7 @@ class CCondition(CSimpleContainer):
     def Paint(self, x, y, element, w = None, h = None):
         if self.__IsTrue(element):
             for child in self.childs:
-                child.Paint(x, y, element, w, h)
+                CSimpleContainer.Paint(self, x, y, element, w, h)
     
     def SetCondition(self, condition):
         self.condition = condition

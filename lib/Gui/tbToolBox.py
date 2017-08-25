@@ -9,20 +9,24 @@ class CtbToolBox(CWidget):
     widgets = ('tbToolBox', )
     
     def Init(self):
-        self.DiagramType = None
+        self.Selected = None
         pixbuf = pixbuf_new_from_file(ARROW_IMAGE)
         newIconWidget = gtk.Image()
         newIconWidget.set_from_pixbuf(pixbuf)
         newIconWidget.show()
-        arrowBtn = self.tbToolBox.get_nth_item(0)
-        arrowBtn.set_icon_widget(newIconWidget)
+        self.ArrowButton = self.tbToolBox.get_nth_item(0)
+        self.ArrowButton.set_label(None)
+        self.ArrowButton.set_label_widget(gtk.HBox())
+        self.ArrowButton.connect("toggled", self.on_tbArrowBtn_toggled)
+        self.ArrowButton.set_icon_widget(newIconWidget)
         
     def __InsertButton(self, Type, TypeDesc, Group):
         newIconWidget = gtk.Image()
         newIconWidget.set_from_pixbuf(Type.GetIcon())
         newIconWidget.show()
         newButton = gtk.RadioToolButton(Group, None)
-        #newButton.set_label(Type.GetId())
+        newButton.set_label(None)
+        newButton.set_label_widget(gtk.HBox())
         newButton.set_icon_widget(newIconWidget)
         newButton.connect("toggled", self.on_tbButton_toggled, Type.GetId(), TypeDesc)
         newButton.show()
@@ -34,7 +38,6 @@ class CtbToolBox(CWidget):
         self.tbToolBox.insert(newSeparator, -1)
                 
     def SetButtons(self, DiagramId):
-        print DiagramId
         self.DiagramType = self.application.DiagramFactory.GetDiagram(DiagramId)
         if self.DiagramType is None:
             raise Exception('tbToolBox.DiagramType is None')
@@ -57,8 +60,17 @@ class CtbToolBox(CWidget):
             for ConnectionName in ConnectionNameList:
                 ConnectionType = self.application.ConnectionFactory.GetConnection(ConnectionName)
                 self.__InsertButton(ConnectionType, 'Connection', ArrowButton)
+                
+    def ResetSelected(self):
+        self.ArrowButton.set_active(True)
+        self.Selected = (None, None)
             
+    def on_tbArrowBtn_toggled(self, widget):
+        self.Selected = (None, None)
         
-    def on_tbButton_toggled(self, widget, ItemId, ItemDesc):
-        pass
+    def on_tbButton_toggled(self, widget, ItemId, ItemType):
+        self.Selected = (ItemType, ItemId)
+        
+    def GetSelected(self):
+        return self.Selected
         

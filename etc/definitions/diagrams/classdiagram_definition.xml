@@ -1,0 +1,9 @@
+<DiagramType id="Class diagram" umlversion="*">
+    <Special swimlines="0" lifelines="0" />
+    <Elements>
+        <Item value="Class" umlversion="*" />
+    </Elements>
+    <Connections>
+        <Item value="Association" umlversion="*" />
+    </Connections>
+</DiagramType>

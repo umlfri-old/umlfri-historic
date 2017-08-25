@@ -1,7 +1,7 @@
 from lib.lib import UMLException
 
 class CProjectNode(object):
-    def __init__(self, parent, name, type):
+    def __init__(self, parent = None, type = None):
         self.parent = parent
         self.childs = []
         self.drawingareas = []        
@@ -9,6 +9,9 @@ class CProjectNode(object):
     
     def GetType(self):
         return self.type
+    
+    def GetName(self):
+        return self.type.GetName()
     
     def AddChild(self, child):
         if child not in self.childs:
@@ -23,8 +26,15 @@ class CProjectNode(object):
             self.drawingareas.append(area)
         else:
             raise UMLException("ExistsArea")
-
-    def GetChild(self, index):
+    
+    def GetChild(self, name):
+        for i in childs:
+            if i.GetName() == name:
+                return i
+        else:
+            return None
+    
+    def GetIndexChild(self, index):
         if index <= len(self.childs) - 1:
             return self.childs[index]
         else:

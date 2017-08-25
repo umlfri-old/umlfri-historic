@@ -19,7 +19,7 @@ class CRectangle(CSimpleContainer):
         return self.fill
 
     def Paint(self, x, y, element, w = None, h = None):
-        wgt = element.GetDrawingArea().GetWidget().window
+        wgt = element.GetDrawingArea().GetDrawable()
         if w is None:
             w = self.GetWidth(element)
         if h is None:

@@ -1,15 +1,21 @@
 from lib.lib import UMLException
 import pango
+import lib.consts
 
 class CDrawingArea:
-    def __init__(self, widget):
+    def __init__(self, widget, drawable = None):
         self.widget = widget
-        self.font = pango.FontDescription('Arial 12')
+        self.font = pango.FontDescription(lib.consts.FONT_TYPE)
         self.pango = (self.widget.create_pango_context(), self.widget.create_pango_layout(""))
         self.pango[1].set_font_description(self.font)
         self.elements = []
         self.elementsreverse = []
         self.connections = []
+        
+        if drawable is None:
+            self.drawable = self.widget.window
+        else:
+            self.drawable = drawable
         
     def AddElement(self, element):
         if element not in self.elements:
@@ -37,6 +43,12 @@ class CDrawingArea:
         else:
             raise UMLException("ConnectionDoesNotExists")
 
+    def GetSize(self):
+        return (1000, 1000)
+        
+    def GetDrawable(self):
+        return self.drawable        
+        
     def GetElementAtPosition(self, x, y):
         for c in self.connections:
             if c.AreYouAtPosition(x, y):

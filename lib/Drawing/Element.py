@@ -14,7 +14,7 @@ class CElement:
         else:
             return False
         
-    def GetElementObject(self):
+    def GetObject(self):
         return self.objct
 
     def GetPosition(self):

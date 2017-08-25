@@ -22,7 +22,7 @@ class CLoop(CSimpleContainer):
     def GetWidth(self, element):
         w = 0
         o = self.__GetOrientation()
-        for item in element.GetElementObject().GetVisualProperty(self.collection):
+        for item in element.GetObject().GetVisualProperty(self.collection):
             for i in self.childs:
                 element.__LOOPVARS__ = item
                 v = i.GetWidth(element)
@@ -37,7 +37,7 @@ class CLoop(CSimpleContainer):
     def GetHeight(self, element):
         h = 0
         o = self.__GetOrientation()
-        for item in element.GetElementObject().GetVisualProperty(self.collection):
+        for item in element.GetObject().GetVisualProperty(self.collection):
             for i in self.childs:
                 element.__LOOPVARS__ = item
                 v = i.GetHeight(element)
@@ -55,7 +55,7 @@ class CLoop(CSimpleContainer):
         if h is None:
             h = self.GetHeight(element)
         o = self.__GetOrientation()
-        for item in element.GetElementObject().GetVisualProperty(self.collection):
+        for item in element.GetObject().GetVisualProperty(self.collection):
             for i in self.childs:
                 element.__LOOPVARS__ = item
                 h = i.GetHeight(element)

@@ -2,8 +2,14 @@
     <Icon path="icons/associate.png" />
 	<SrcArrow possible="1" default="0" />
 	<DestArrow possible="1" default="0" />
+    <Attributes>
+        <Item value="Name" type="str" propid="name" />
+    </Attributes>
     <Appearance>
     	<LineStyle style="solid" color="red" />
-    	<ArrowStyle style="crosscircle" fill="blue" color="black" />
+    	<ArrowStyle style="simple" fill="blue" color="black" />
+        <Label position="destination">
+            <TextBox align="left" text="#name" />
+        </Label>
     </Appearance>
 </ConnectionType>

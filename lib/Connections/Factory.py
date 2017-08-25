@@ -23,21 +23,23 @@ class CConnectionFactory:
         dom = xml.dom.minidom.parse(file_path)
         root = dom.documentElement
         if root.tagName != 'ConnectionType':
-            raise UMLException("XMLError")
+            raise UMLException("XMLError", root.tagName)
         if not root.hasAttribute('id'):
-            raise UMLException("XMLError")
+            raise UMLException("XMLError", ('ConnectionType', 'id'))
         id = root.getAttribute('id')
         sarr = {}
         darr = {}
         ls = {}
         icon = None
+        labels = []
+        attrs = []
         for i in root.childNodes:
             if i.nodeType not in (xml.dom.minidom.Node.ELEMENT_NODE, xml.dom.minidom.Node.DOCUMENT_NODE):
                 continue
             en = i.tagName
             if en == 'Icon':
                 if not i.hasAttribute('path'):
-                    raise UMLException("XMLError")
+                    raise UMLException("XMLError", ('Icon', 'path'))
                 icon = pixbuf_new_from_file(i.getAttribute('path'))
             elif en == 'SrcArrow':
                 if i.hasAttribute('possible'):
@@ -49,6 +51,33 @@ class CConnectionFactory:
                     darr['possible'] = i.getAttribute('possible')
                 if i.hasAttribute('default'):
                     darr['default'] = i.getAttribute('default')
+            elif en == 'Attributes':
+                for item in i.childNodes:
+                    if item.nodeType not in (xml.dom.minidom.Node.ELEMENT_NODE, xml.dom.minidom.Node.DOCUMENT_NODE):
+                        continue
+                    if item.tagName != 'Item':
+                        raise UMLException("XMLError", item.tagName)
+                    if not item.hasAttribute('value'):
+                        raise UMLException("XMLError", ('Item', 'value'))
+                    value = item.getAttribute('value')
+                    if not item.hasAttribute('type'):
+                        raise UMLException("XMLError", ('Item', 'type'))
+                    type = item.getAttribute('type')
+                    propid = None
+                    options = []
+                    if item.hasAttribute('propid'):
+                        propid = item.getAttribute('propid')
+                    if item.hasChildNodes():
+                        options = []
+                        for opt in item.childNodes:
+                            if opt.nodeType not in (xml.dom.minidom.Node.ELEMENT_NODE, xml.dom.minidom.Node.DOCUMENT_NODE):
+                                continue
+                            if opt.tagName != 'Option':
+                                raise UMLException("XMLError", opt.tagName)
+                            if not opt.hasAttribute('value'):
+                                raise UMLException("XMLError", ('Option', 'value'))
+                            options.append(opt.getAttribute('value'))
+                    attrs.append((value, type, propid, options))
             elif en == 'Appearance':
                 for j in i.childNodes:
                     if j.nodeType not in (xml.dom.minidom.Node.ELEMENT_NODE, xml.dom.minidom.Node.DOCUMENT_NODE):
@@ -70,5 +99,38 @@ class CConnectionFactory:
                             darr['style'] = sarr['style'] = j.getAttribute('style')
                         if j.hasAttribute('size'):
                             darr['size'] = sarr['size'] = j.getAttribute('size')
-        self.types[id] = CConnectionType(id, CConnectionLine(**ls),
+                    elif en == 'Label':
+                        if not j.hasAttribute('position'):
+                            raise UMLException("XMLError", ('Label', 'position'))
+                        tmp = None
+                        for k in j.childNodes:
+                            if k.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
+                                if tmp is not None:
+                                    raise UMLException("XMLError", 'Label')
+                                tmp = k
+                        labels.append((j.getAttribute('position'), self.__LoadAppearance(tmp)))
+                    else:
+                        raise UMLException('XMLError', en)
+            else:
+                raise UMLException('XMLError', en)
+        tmp = self.types[id] = CConnectionType(id, CConnectionLine(**ls),
                                     CConnectionArrow(**sarr), CConnectionArrow(**darr), icon)
+        for pos, lbl in labels:
+            tmp.AddLabel(pos, lbl)
+        
+        for attr in attrs:
+            tmp.AppendAttribute(*attr)
+    
+    def __LoadAppearance(self, root):
+        if root.tagName not in ALL:
+            raise UMLException("XMLError", root.tagName)
+        cls = ALL[root.tagName]
+        params = {}
+        for i in root.attributes.values():
+            params[str(i.name)] = i.nodeValue
+        obj = cls(**params)
+        for child in root.childNodes:
+            if child.nodeType not in (xml.dom.minidom.Node.ELEMENT_NODE, xml.dom.minidom.Node.DOCUMENT_NODE):
+                continue
+            obj.AppendChild(self.__LoadAppearance(child))
+        return obj

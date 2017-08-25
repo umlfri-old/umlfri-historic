@@ -8,13 +8,37 @@ class CConnection:
         self.screen.AddConnection(self)
         self.conObject = obj
         self.points = points
+        self.labels = {}
+    
+    def GetObject(self):
+        return self.conObject
+    
+    def GetLabelPosition(self, position, id):
+        if id in self.labels:
+            return self.labels[id]
+        else:
+            if position == 'source':
+                tmp = self.labels[id] = (self.points[0][0] , self.points[0][1])
+            elif position == 'destination':
+                tmp = self.labels[id] = (self.points[-1][0] , self.points[-1][1])
+            elif position == 'center':
+                tmp = self.labels[id] = (0, 0)
+            else:
+                raise UMLException("UndefinedPosition")
+            return tmp
+    
+    def IsLabelAtPosition(self):
+        pass
+    
+    def SetLabelPosition(self, label, x, y):
+        self.labels[label] = (x, y)
+        
         
     def AddPoint(self, index, x, y):
         if index < len(self.points) - 1:
             self.insert(index,(x,y))
         else:
             raise UMLException("PointNotExists")
-
 
     def AreYouAtPosition(self, x, y):
         Xo, Yo = self.points[0]

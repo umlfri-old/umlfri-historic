@@ -21,23 +21,33 @@ tmp.show()
 
 draare = lib.Drawing.CDrawingArea(tmp)
 
-###############3
+###############
 ## Create Class
 cls = elfs.GetElement("Class")
-element = lib.Elements.CElementObject(cls, "hihi")
-element.AddAttribute("Name", "hihiaaaaaaaa")
-element.AddAttribute("Attributes", [{'type':'+', 'line': "123"}, {'type':'-', 'line': "456"}])
-element.AddAttribute("Operations", [])
-element.AddAttribute("Abstract", False)
-element.AddAttribute("Scope", "public")
+element = lib.Elements.CElementObject(cls)
+element.SetAttribute("Name", "hihiaaaaaaaa")
+element.SetAttribute("Attributes", [{'type':'+', 'line': "123"}, {'type':'-', 'line': "456"}])
+element.SetAttribute("Operations", [])
+element.SetAttribute("Abstract", False)
+element.SetAttribute("Scope", "public")
 
-element = lib.Drawing.CElement(draare, element)
-element.SetPosition(100, 100)
+clas = lib.Drawing.CElement(draare, element)
+clas.SetPosition(100, 100)
+
+###############
+## Create Package
+cls = elfs.GetElement("Package")
+element = lib.Elements.CElementObject(cls)
+element.SetAttribute("Name", "hihiaaaaaaaa")
+
+pack = lib.Drawing.CElement(draare, element)
+pack.SetPosition(200, 200)
 
 #############
 ## Create associatoin
 ass = cofs.GetConnection("Association")
 conObj = lib.Connections.CConnectionObject(ass)
+conObj.SetAttribute('Name', 'conn')
 conect = lib.Drawing.CConnection(draare,conObj,[(120,165),(25,25),(60,60),(60,80)])
 
 def clicked(widget, event):

@@ -83,7 +83,7 @@ class CConnectionArrow(object):
                 matrix = self.__MultiplyMatrix(rotationMatrix, i)
                 points.append((int(matrix[0][0]*self.size+x),int(matrix[1][0]*self.size+y)))
             
-            wgt = Connection.GetDrawingArea().GetWidget().window
+            wgt = Connection.GetDrawingArea().GetDrawable()
             cmap = wgt.get_colormap()
             gc = wgt.new_gc()
             if ARROW_TYPES[self.style][0] == 'polyline':

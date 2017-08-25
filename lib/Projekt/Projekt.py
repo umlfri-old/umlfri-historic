@@ -1,19 +1,32 @@
+from lib.lib import UMLException
 from ProjectNode import CProjectNode
 
-class CProjekt:
-    def __init__(self, file):
+class CProjekt(object):
+    def __init__(self, file = None):
         self.root = None
+      
+    def SetRoot(self, value):
+        self.root = value
     
-    def Find(self,node):
-        lst.append(node)
-        while len(lst) > 0:
-            tmp = lst.pop(0)
-            lst += tmp.GetChilds()
-            if tmp is node:
-                return tmp
-        else:
-            return None
-
+    def GetRoot(self):
+        return self.root
+    
+    def GetElement(self, path):
+        node = self.root
+        for i in path.split('/')[1:]:
+            node = node.GetChild(i)
+            if node is None:
+                raise UMLException("BadPath")
+        return node            
+    
+    def Find(self, name):
+        stack = [self.root]
+        while len(stack) > 0:
+            node = stack.pop(0)
+            if node.GetName() == name:
+                return node
+            stack += node.GetChilds()
+        return None
 
     def AddNode(self, node, parent):
         parent.AddChild(node)
@@ -25,3 +38,5 @@ class CProjekt:
 
     def RemoveNode(self, node):
         node.GetParent(node).RemoveChild(node)
+
+    Root = property(GetRoot, SetRoot)

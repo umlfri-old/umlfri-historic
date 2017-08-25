@@ -40,7 +40,7 @@ class CLine(CVisualObject):
 
     def Paint(self, x, y, element, w = None, h = None):
         tp = self.ComputeType()
-        wgt = element.GetDrawingArea().GetWidget().window
+        wgt = element.GetDrawingArea().GetDrawable()
         gc = wgt.new_gc(foreground = self.color_obj)
         if tp == 'horizontal' and w is not None:
             wgt.draw_line(gc, x, y, x+w, y)
