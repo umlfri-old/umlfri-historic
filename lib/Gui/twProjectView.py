@@ -1,4 +1,4 @@
-from lib.Glade import CWidget
+from common import CWidget
 from lib.Projekt import CProjekt, CProjectNode
 from lib.Elements import CElementFactory, CElementObject
 from lib.Drawing import CElement

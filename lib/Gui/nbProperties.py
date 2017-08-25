@@ -1,4 +1,4 @@
-from lib.Glade import CWidget
+from common import CWidget
 
 class CnbProperties(CWidget):
 	pass

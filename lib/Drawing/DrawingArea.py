@@ -75,7 +75,7 @@ class CDrawingArea:
                 x2 = x + w
             if y + h > y2:
                 y2 = y + h
-        return (x1, y1), (x2, y2)
+        return (x1, y1), (x2 - x1, y2 - y1)
     
     def MoveSelection(self, deltax, deltay):
         for el in self.selected:

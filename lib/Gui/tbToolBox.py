@@ -1,4 +1,4 @@
-from lib.Glade import CWidget
+from common import CWidget
 
 import gtk
 from gtk.gdk import pixbuf_new_from_file
@@ -74,7 +74,7 @@ class CtbToolBox(CWidget):
         return self.Selected
         
     def SetSelected(self, message):
-        self.Selected = message.GetSelected()
+        self.Selected = message
         if self.Selected  == None:
             self.__ResetSelected()
         else:

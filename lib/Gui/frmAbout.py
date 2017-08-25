@@ -1,6 +1,6 @@
-import lib.Glade
+import common
 
-class CfrmAbout(lib.Glade.CWindow):
+class CfrmAbout(common.CWindow):
     widgets = ()
     name = 'frmAbout'
     

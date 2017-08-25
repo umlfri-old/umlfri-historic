@@ -1,6 +1,6 @@
 import gtk, gobject
 
-from lib.Glade import CWidget
+from common import CWidget
 
 class CmnuItems(CWidget):
     widgets = ('mnuDiagrams', )

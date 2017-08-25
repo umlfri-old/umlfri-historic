@@ -76,6 +76,8 @@ class CConnectionArrow(object):
         return matrix
     
     def Paint(self, x, y, angle, Connection):
+        if self.possible is False:
+            return
         rotationMatrix = self.__RotationMatrix(angle)
         points = []
         if self.style in ARROW_TYPES.keys():

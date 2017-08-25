@@ -64,6 +64,9 @@ class CElementType:
     def GetAttributes(self):
         for i in self.attributes:
             yield i
+            
+    def GetAttribute(self, key):
+        return self.attributes[key]
     
     def Paint(self, element):
         x, y = element.GetPosition()

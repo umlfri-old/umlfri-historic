@@ -38,6 +38,10 @@ class CElementObject:
             return self.attribs[key]
         else:
             return None
+    
+    def GetAttributes(self):
+        return self.attribs
+            
         
     def GetVisualProperty(self, key):
         return self.attribs[self.type.GetVisAttr(key)]

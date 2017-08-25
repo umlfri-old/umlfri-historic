@@ -1,7 +1,5 @@
-import lib.Glade
 import pygtk
 import gtk
-
 import common
 
 from tbToolBox import CtbToolBox
@@ -10,7 +8,7 @@ from mnuItems import CmnuItems
 from picDrawingArea import CpicDrawingArea
 from lwProperties import ClwProperties
 
-class CfrmMain(lib.Glade.CWindow):
+class CfrmMain(common.CWindow):
     name = 'frmMain'
     widgets = ('hboxWorkSpace', 'mnuUseCaseDiagram', 
         'twProjectView', 'lwProperties')
@@ -18,14 +16,16 @@ class CfrmMain(lib.Glade.CWindow):
         'tbToolBox': CtbToolBox, 
         'twProjectView': CtwProjectView,
         'mnuItems': CmnuItems,
-        'picDrawingArea': CpicDrawingArea,
-        'lwProperties': ClwProperties,
+        'picDrawingArea': CpicDrawingArea, 
+        'lwProperties': ClwProperties
         }
     
     def Init(self):
         self.mnuItems.connect('create_diagram', self.on_mnuItems_create_diagram)
         self.picDrawingArea.connect('get_selected', self.on_picDrawingArea_get_selected)
         self.picDrawingArea.connect('set_selected', self.on_picDrawingArea_set_selected)
+        self.picDrawingArea.connect('selected_item', self.on_picDrawingArea_selected_item)
+        self.lwProperties.connect('content_update', self.on_lwProperties_content_update)
         self.mnuItems.LoadDiagramsMenu()
     
     
@@ -66,10 +66,10 @@ class CfrmMain(lib.Glade.CWindow):
     def on_mnuViewTools_activate(self, mnu):
         # self.tbTools.set_child_visible(mnu.get_active())
         if mnu.get_active():
-            self.hboxWorkSpace.pack_start(self.tbToolBox, expand=False, fill=False)
-            self.hboxWorkSpace.reorder_child(self.tbToolBox, 0)
+            self.hboxWorkSpace.pack_start(self.tbToolBox.GetToolBox(), expand=False, fill=False)
+            self.hboxWorkSpace.reorder_child(self.tbToolBox.GetToolBox(), 0)
         else:
-            self.hboxWorkSpace.remove(self.tbToolBox)
+            self.hboxWorkSpace.remove(self.tbToolBox.GetToolBox())
             
     # View
     def on_mnuClassDiahram_activate(self, mnu):
@@ -100,7 +100,13 @@ class CfrmMain(lib.Glade.CWindow):
         self.tbToolBox.SetButtons(diagramId)
         
     def on_picDrawingArea_get_selected(self, widget):
-        return common.SelectedMessage(self.tbToolBox.GetSelected())        
+        return self.tbToolBox.GetSelected()
         
     def on_picDrawingArea_set_selected(self, widget, selected):
         self.tbToolBox.SetSelected(selected)
+        
+    def on_picDrawingArea_selected_item(self, widget, selected):
+        self.lwProperties.Fill(selected)
+        
+    def on_lwProperties_content_update(self, widget):
+        self.picDrawingArea.Paint()
