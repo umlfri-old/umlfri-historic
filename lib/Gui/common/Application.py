@@ -1,30 +1,32 @@
-import gtk.glade
 import gtk
+import gobject
+import gtk.glade
+from os.path import abspath
 
-class CApplication:
+from lib.lib import UMLException
+
+class CApplication(gobject.GObject):
     windows = ()
-    glade = ''
+    glade = None
     wins = {}
     main_window = ''
     
     def __init__(self):
-        self.wTree = gtk.glade.XML(self.glade)
-        for i in self.windows:
-            tmp = self.wins[i.name] = i(self)
-            for widgetName in tmp.widgets:
-                setattr(tmp, widgetName, self.wTree.get_widget(widgetName))
-            for widgetName, widgetClass in tmp.complexWidgets.iteritems():
-                wgt = widgetClass(self)
-                setattr(tmp, widgetName, wgt)
-                for widgetName in wgt.widgets:
-                    setattr(wgt, widgetName, self.wTree.get_widget(widgetName))
-                self.wTree.signal_autoconnect(wgt)
-                wgt.Init2()
-                wgt.Init()
-            tmp.form = self.wTree.get_widget(i.name)
-            self.wTree.signal_autoconnect(tmp)
-            tmp.Init2()
-            tmp.Init()
+        self.wTrees = {}
+        if self.glade is not None:
+            self.wTrees[abspath(self.glade)] = self.wTrees[None] = gtk.glade.XML(self.glade)
+        for windowClass in self.windows:
+            if windowClass.glade is None:
+                glade = None
+            else:
+                glade = abspath(windowClass.glade)
+            if glade not in self.wTrees:
+                if glade is None:
+                    raise UMLException("ApplicationError")
+                wTree = self.wTrees[glade] = gtk.glade.XML(glade)
+            else:
+                wTree = self.wTrees[glade]
+            self.wins[windowClass.name] = windowClass(self, wTree)
     
     def GetWindow(self, name):
         return self.wins[name]

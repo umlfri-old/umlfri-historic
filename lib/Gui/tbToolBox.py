@@ -6,9 +6,10 @@ from gtk.gdk import pixbuf_new_from_file
 from lib.consts import ARROW_IMAGE
 
 class CtbToolBox(CWidget):
-    __visible = True
-    
+    name = 'tbToolBox'
     widgets = ('tbToolBox', 'hboxWorkSpace')
+    
+    __visible = True
     
     def Init(self):
         self.Selected = None

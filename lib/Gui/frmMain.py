@@ -6,28 +6,21 @@ from tbToolBox import CtbToolBox
 from twProjectView import CtwProjectView
 from mnuItems import CmnuItems
 from picDrawingArea import CpicDrawingArea
-from lwProperties import ClwProperties
-from txtNotes import CtxtNotes
+from nbProperties import CnbProperties
 
 class CfrmMain(common.CWindow):
     name = 'frmMain'
     widgets = ('hboxWorkSpace', 'mnuUseCaseDiagram', 
         'twProjectView', 'lwProperties')
-    complexWidgets = {
-        'tbToolBox': CtbToolBox, 
-        'twProjectView': CtwProjectView,
-        'mnuItems': CmnuItems,
-        'picDrawingArea': CpicDrawingArea, 
-        'lwProperties': ClwProperties,
-        'txtNotes': CtxtNotes,
-        }
+    
+    complexWidgets = (CtbToolBox, CtwProjectView, CmnuItems, CpicDrawingArea, CnbProperties)
     
     def Init(self):
         self.mnuItems.connect('create_diagram', self.on_mnuItems_create_diagram)
         self.picDrawingArea.connect('get_selected', self.on_picDrawingArea_get_selected)
         self.picDrawingArea.connect('set_selected', self.on_picDrawingArea_set_selected)
         self.picDrawingArea.connect('selected_item', self.on_picDrawingArea_selected_item)
-        self.lwProperties.connect('content_update', self.on_lwProperties_content_update)
+        self.nbProperties.connect('content_update', self.on_nbProperties_content_update)
         self.mnuItems.LoadDiagramsMenu()
         
         self.form.maximize()
@@ -106,9 +99,8 @@ class CfrmMain(common.CWindow):
         self.tbToolBox.SetSelected(selected)
         
     def on_picDrawingArea_selected_item(self, widget, selected):
-        self.lwProperties.Fill(selected)
-        self.txtNotes.Fill(selected)
-        
-    def on_lwProperties_content_update(self, widget, element, property):
+        self.nbProperties.Fill(selected)
+    
+    def on_nbProperties_content_update(self, widget, element, property):
         if element.GetObject().GetType().HasVisualAttribute(property):
             self.picDrawingArea.Paint()

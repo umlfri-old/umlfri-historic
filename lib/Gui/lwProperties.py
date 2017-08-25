@@ -7,6 +7,7 @@ import gtk.gdk
 ID_NAME, ID_VALUE, ID_TEXT_VISIBLE, ID_COMBO_VISIBLE, ID_EDITABLE ,ID_BUTTON_VISIBLE, ID_MODEL, ID_TYPE = range(8)
 
 class ClwProperties(CWidget):
+    name = 'lwProperties'
     widgets = ('lwProperties',)
     
     __gsignals__ = {
@@ -49,6 +50,7 @@ class ClwProperties(CWidget):
         self.Column2.add_attribute(self.ComboRenderer, 'visible', ID_COMBO_VISIBLE)
         self.Column2.add_attribute(self.ComboRenderer, 'text', ID_VALUE)
         
+        self.Column2.add_attribute(self.ButtonRenderer, 'text', ID_VALUE)
         self.Column2.add_attribute(self.ButtonRenderer, 'visible', ID_BUTTON_VISIBLE)
         
         
@@ -77,13 +79,14 @@ class ClwProperties(CWidget):
                 model = gtk.ListStore(gobject.TYPE_STRING)
                 for i in atrtype[1]:
                     model.set(model.append(), 0 , str(i))
-                self.listStore.set(row, ID_NAME, str(k), ID_VALUE, str(v), ID_TEXT_VISIBLE, False, ID_COMBO_VISIBLE, True, ID_BUTTON_VISIBLE, False, ID_EDITABLE, True, ID_MODEL, model)
+                editable = not (atrtype[0] == 'enum')
+                self.listStore.set(row, ID_NAME, str(k), ID_VALUE, str(v), ID_TEXT_VISIBLE, False, ID_COMBO_VISIBLE, True, ID_BUTTON_VISIBLE, False, ID_EDITABLE, editable, ID_MODEL, model)
             elif atrtype[0] == 'str':
                 self.listStore.set(row, ID_TYPE, atrtype[0], ID_NAME, str(k), ID_VALUE, str(v), ID_TEXT_VISIBLE, True, ID_COMBO_VISIBLE, False, ID_BUTTON_VISIBLE, False, ID_EDITABLE, True)
             elif atrtype[0] == 'note':
                 pass
             else:
-                self.listStore.set(row, ID_TYPE, atrtype[0], ID_NAME, str(k), ID_TEXT_VISIBLE, False, ID_COMBO_VISIBLE, False, ID_BUTTON_VISIBLE, True)
+                self.listStore.set(row, ID_TYPE, atrtype[0], ID_NAME, str(k), ID_VALUE, "<<list>>", ID_TEXT_VISIBLE, False, ID_COMBO_VISIBLE, False, ID_BUTTON_VISIBLE, True)
     
     def Clear(self):
         self.element = None

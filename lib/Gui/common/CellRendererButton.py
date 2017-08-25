@@ -34,7 +34,7 @@ class CellRendererButton(gtk.GenericCellRenderer):
         layout = widget.create_pango_layout(self.text)
         layout.set_font_description(widget.style.font_desc)
         w, h = layout.get_size()
-        x = 3
+        x = cell_area.x + 3
         y = int(cell_area.y + (cell_area.height - h / pango.SCALE) / 2)
         window.draw_layout(widget.style.text_gc[tid], x, y, layout)
         if flags & gtk.CELL_RENDERER_SELECTED:

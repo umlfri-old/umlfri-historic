@@ -3,6 +3,7 @@ import gtk, gobject
 from common import CWidget
 
 class CmnuItems(CWidget):
+    name = 'mnuItems'
     widgets = ('mnuDiagrams', )
     
     __gsignals__ = {

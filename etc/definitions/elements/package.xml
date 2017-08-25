@@ -6,7 +6,7 @@
     </Connections>
     <Attributes>
         <Item value="Name" type="str" propid="name" />
-        <Item value="Scope" type="str">
+        <Item value="Scope" type="enum">
             <Option value="public" />
             <Option value="private" />
             <Option value="protected" />

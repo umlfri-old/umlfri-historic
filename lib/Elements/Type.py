@@ -1,4 +1,3 @@
-##### SetIcon/GetIcon
 from lib.lib import ToBool
 
 class CElementType:
@@ -43,6 +42,11 @@ class CElementType:
                 return 0
             else:
                 return int(temp)
+        if type == 'enum':
+            if temp is None:
+                raise UMLException("ListNoOptions")
+            else:
+                return str(temp)
         elif type == 'float':
             if temp is None:
                 return 0.0

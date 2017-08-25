@@ -9,6 +9,7 @@ import gtk
 import gtk.gdk
 
 class CtwProjectView(CWidget):
+    name = 'twProjectView'
     widgets = ('twProjectView', )
     
     def Init(self):

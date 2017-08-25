@@ -13,6 +13,7 @@ from lib.Connections import CConnectionObject
 targets = [('document/uml', 0, gtk.TARGET_SAME_WIDGET)]
 
 class CpicDrawingArea(CWidget):
+    name = 'picDrawingArea'
     widgets = ('picDrawingArea', 'picEventBox', 'picVBar', 'picHBar')
     
     __gsignals__ = {
@@ -161,9 +162,9 @@ class CpicDrawingArea(CWidget):
     def __Scroll(self, scrollbar, direction):
         tmp = scrollbar.get_adjustment()
         if direction == gtk.gdk.SCROLL_UP:
-            tmp.value = max(tmp.lower, tmp.value - 10)
+            tmp.value = max(tmp.lower, tmp.value - 20)
         elif direction == gtk.gdk.SCROLL_DOWN:
-            tmp.value = min(tmp.upper - tmp.page_size, tmp.value + 10)
+            tmp.value = min(tmp.upper - tmp.page_size, tmp.value + 20)
         scrollbar.set_adjustment(tmp)
         
     def __DragBegin(self, event):

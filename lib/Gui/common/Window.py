@@ -1,18 +1,28 @@
-class CWindow:
+import gobject
+
+class CWindow(gobject.GObject):
     widgets = ()
-    complexWidgets = {}
+    complexWidgets = ()
     name = ''
     dont_delete = False
+    glade = None
     
-    def __init__(self, app):
+    def __init__(self, app, wTree):
         self.application = app
+        for widgetName in self.widgets:
+            setattr(self, widgetName, wTree.get_widget(widgetName))
+        for widgetClass in self.complexWidgets:
+            setattr(self, widgetClass.name, widgetClass(app, wTree))
+        self.form = wTree.get_widget(self.name)
+        wTree.signal_autoconnect(self)
+        
+        if self.dont_delete:
+            self.form.connect('delete-event', self.__on_delete_event)
+        
+        self.Init()
     
     def Init(self):
         pass
-    
-    def Init2(self):
-        if self.dont_delete:
-            self.form.connect('delete-event', self.__on_delete_event)
     
     def Show(self):
         self.form.show()
