@@ -18,6 +18,17 @@ class CRectangle(CSimpleContainer):
     def GetFill(self):
         return self.fill
 
+    def PaintShadow(self, x, y, element, color, w = None, h = None):
+        wgt = element.GetDrawingArea().GetDrawable()
+        if w is None:
+            w = self.GetWidth(element)
+        if h is None:
+            h = self.GetHeight(element)
+        gc = wgt.new_gc()
+        cmap = wgt.get_colormap()
+        gc.foreground = cmap.alloc_color(color)
+        wgt.draw_rectangle(gc, True, x, y, w, h)
+
     def Paint(self, x, y, element, w = None, h = None):
         wgt = element.GetDrawingArea().GetDrawable()
         if w is None:

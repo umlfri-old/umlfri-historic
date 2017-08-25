@@ -1,6 +1,12 @@
 from os.path import join, dirname, abspath
 
-FONT_TYPE = 'Arial 14' 
+SELECT_SQUARES_SIZE = 7
+SELECT_SQUARES_COLOR = "lightgreen"
+SELECT_SQUARE_COLOR = "yellow"
+SELECT_SQUARE_SIZE = 3
+
+FONT_TYPE = 'Arial 10'
+
 ROOT_PATH = abspath(join(dirname(__file__), '..'))
 ETC_PATH = join(ROOT_PATH, 'etc')
 DEFINITIONS_PATH = join(ETC_PATH, 'definitions')

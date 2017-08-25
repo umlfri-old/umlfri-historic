@@ -20,6 +20,12 @@ class CElementObject:
         
     def GetType(self):
         return self.type
+    
+    def GetWidth(self, element):
+        return self.type.GetWidth(element)
+    
+    def GetHeight(self, element):
+        return self.type.GetHeight(element)
         
     def GetName(self):
         if 'Name' in self.attribs:

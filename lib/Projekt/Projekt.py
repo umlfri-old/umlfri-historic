@@ -29,7 +29,10 @@ class CProjekt(object):
         return None
 
     def AddNode(self, node, parent):
-        parent.AddChild(node)
+        if parent is None:
+            self.root = node
+        else:
+            parent.AddChild(node)
 
     def MoveNode(self, node, newParent):
         node.GetParent(node).RemoveChild(node)

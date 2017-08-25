@@ -39,6 +39,11 @@ class CCondition(CSimpleContainer):
             return CSimpleContainer.GetWidth(self, element)
         return 0
 
+    def PaintShadow(self, x, y, element, color, w = None, h = None):
+        if self.__IsTrue(element):
+            for child in self.childs:
+                CSimpleContainer.Paint(self, x, y, element, color, w, h)
+
     def Paint(self, x, y, element, w = None, h = None):
         if self.__IsTrue(element):
             for child in self.childs:

@@ -1,6 +1,7 @@
 <DiagramType id="Class diagram" umlversion="*">
     <Special swimlines="0" lifelines="0" />
     <Elements>
+        <Item value="Package" umlversion="*" />
         <Item value="Class" umlversion="*" />
     </Elements>
     <Connections>

@@ -8,7 +8,7 @@
     <Appearance>
     	<LineStyle style="solid" color="red" />
     	<ArrowStyle style="simple" fill="blue" color="black" />
-        <Label position="destination">
+        <Label position="center">
             <TextBox align="left" text="#name" />
         </Label>
     </Appearance>

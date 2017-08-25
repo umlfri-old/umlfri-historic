@@ -13,6 +13,9 @@ class CVisualObject:
 
     def Paint(self, x, y, element, w = None, h = None):
         pass
+    
+    def PaintShadow(self, x, y, element, color, w = None, h = None):
+        pass
 
     def SetParent(self, parent):
         self.parent = parent

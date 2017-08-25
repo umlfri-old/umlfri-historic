@@ -17,7 +17,7 @@
         <Item value="Abstract" type="bool" />
     </Attributes>
     <Appearance>
-        <Shadow padding="3">
+        <Shadow padding="3" color="#505050">
             <Rectangle fill="lightpink2" border="black">
                 <HBox>
                     <Padding padding="5">
@@ -51,7 +51,6 @@
                     </Condition>
                 </HBox>
             </Rectangle>
-            <Rectangle fill="#505050" border="#505050" />
         </Shadow>
     </Appearance>
 </ElementType>

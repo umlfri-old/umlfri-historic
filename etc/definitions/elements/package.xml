@@ -14,7 +14,7 @@
         </Item>
     </Attributes>
     <Appearance>
-        <Shadow padding="3">
+        <Shadow padding="3" color="#505050">
             <HBox>
                 <VBox>
                     <Rectangle fill="lightpink2" border="black">
@@ -25,19 +25,6 @@
                     <Padding padding="15" />
                 </VBox>
                 <Rectangle fill="lightpink2" border="black">
-                    <Padding padding="40" />
-                </Rectangle>
-            </HBox>
-            <HBox>
-                <VBox>
-                    <Rectangle fill="#505050" border="#505050">
-                        <Padding padding="5">
-                            <TextBox align="left" text="#name" color="#505050" />
-                        </Padding>
-                    </Rectangle>
-                    <Padding padding="15" />
-                </VBox>
-                <Rectangle fill="#505050" border="#505050">
                     <Padding padding="40" />
                 </Rectangle>
             </HBox>

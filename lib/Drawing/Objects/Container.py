@@ -30,6 +30,14 @@ class CContainer(CVisualObject):
             if w < v:
                 w = v
         return w
+    
+    def PaintShadow(self, x, y, element, color, w = None, h = None):
+        if w is None:
+            w = self.GetWidth(element)
+        if h is None:
+            h = self.GetHeight(element)
+        for i in self.childs:
+            i.PaintShadow(x, y, element, color, w, h)
 
     def Paint(self, x, y, element, w = None, h = None):
         if w is None:

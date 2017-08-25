@@ -61,12 +61,11 @@ class CtbToolBox(CWidget):
                 ConnectionType = self.application.ConnectionFactory.GetConnection(ConnectionName)
                 self.__InsertButton(ConnectionType, 'Connection', ArrowButton)
                 
-    def ResetSelected(self):
+    def __ResetSelected(self):
         self.ArrowButton.set_active(True)
-        self.Selected = (None, None)
             
     def on_tbArrowBtn_toggled(self, widget):
-        self.Selected = (None, None)
+        self.Selected = None
         
     def on_tbButton_toggled(self, widget, ItemId, ItemType):
         self.Selected = (ItemType, ItemId)
@@ -74,3 +73,10 @@ class CtbToolBox(CWidget):
     def GetSelected(self):
         return self.Selected
         
+    def SetSelected(self, message):
+        self.Selected = message.GetSelected()
+        if self.Selected  == None:
+            self.__ResetSelected()
+        else:
+            pass
+            

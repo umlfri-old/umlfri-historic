@@ -83,3 +83,9 @@ class CElementType:
             return self.visAttrs[id]
         else:
             raise UMLException('VisAttrDontExists')
+    
+    def GetWidth(self, element):
+        return self.appearance.GetWidth(element)
+    
+    def GetHeight(self, element):
+        return self.appearance.GetHeight(element)

@@ -49,6 +49,23 @@ class CLoop(CSimpleContainer):
                 del element.__LOOPVARS__
         return h
 
+    def PaintShadow(self, x, y, element, color, w = None, h = None):
+        if w is None:
+            w = self.GetWidth(element)
+        if h is None:
+            h = self.GetHeight(element)
+        o = self.__GetOrientation()
+        for item in element.GetObject().GetVisualProperty(self.collection):
+            for i in self.childs:
+                element.__LOOPVARS__ = item
+                h = i.GetHeight(element)
+                i.PaintShadow(x, y, element, color, w, h)
+                if o == "horizontal":
+                    y += h
+                else:
+                    x += w
+                del element.__LOOPVARS__
+
     def Paint(self, x, y, element, w = None, h = None):
         if w is None:
             w = self.GetWidth(element)

@@ -22,17 +22,30 @@ class CEllipse(CSimpleContainer):
     def GetFill(self):
         return self.fill
 
-    def Paint(self, x, y, element, w = None, h = None):
+    def PaintShadow(self, x, y, element, color, w = None, h = None):
         wgt = element.GetDrawingArea().GetDrawable()
-        if self.fill is None:
-            gc = wgt.new_gc(foreground = self.border_obj)
-        else:
-            gc = wgt.new_gc(foreground = self.border_obj, background = self.fill_obj)
         if w is None:
             w = self.GetWidth(element)
         if h is None:
             h = self.GetHeight(element)
-        wgt.draw_arc(gc, self.fill is not None, x, y, w, h, 0, 360*64)
+        gc = wgt.new_gc()
+        cmap = wgt.get_colormap()
+        gc.foreground = cmap.alloc_color(color)
+        wgt.draw_arc(gc, True, x, y, w, h, 0, 360*64)
+
+    def Paint(self, x, y, element, w = None, h = None):
+        wgt = element.GetDrawingArea().GetDrawable()
+        if w is None:
+            w = self.GetWidth(element)
+        if h is None:
+            h = self.GetHeight(element)
+        gc = wgt.new_gc()
+        cmap = wgt.get_colormap()
+        if self.fill is not None:
+            gc.foreground = cmap.alloc_color(self.fill)
+            wgt.draw_arc(gc, True, x, y, w, h, 0, 360*64)
+        gc.foreground = cmap.alloc_color(self.border)
+        wgt.draw_arc(gc, False, x, y, w, h, 0, 360*64)
         for i in self.childs:
             i.Paint(x, y, element, w, h)
 

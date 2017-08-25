@@ -7,7 +7,6 @@ class CLine(CVisualObject):
         CVisualObject.__init__(self)
         self.type = type
         self.color = color
-        self.color_obj = gtk.gdk.color_parse(color)
 
     def GetType(self):
         return self.type
@@ -38,10 +37,21 @@ class CLine(CVisualObject):
         else:
             return 0
 
+    def PaintShadow(self, x, y, element, color, w = None, h = None):
+        tp = self.ComputeType()
+        wgt = element.GetDrawingArea().GetDrawable()
+        cmap = wgt.get_colormap()
+        gc = wgt.new_gc(foreground = cmap.alloc_color(color))
+        if tp == 'horizontal' and w is not None:
+            wgt.draw_line(gc, x, y, x+w, y)
+        elif tp == 'vertical' and h is not None:
+            wgt.draw_line(gc, x, y, x, y+h)
+
     def Paint(self, x, y, element, w = None, h = None):
         tp = self.ComputeType()
         wgt = element.GetDrawingArea().GetDrawable()
-        gc = wgt.new_gc(foreground = self.color_obj)
+        cmap = wgt.get_colormap()
+        gc = wgt.new_gc(foreground = cmap.alloc_color(self.color))
         if tp == 'horizontal' and w is not None:
             wgt.draw_line(gc, x, y, x+w, y)
         elif tp == 'vertical' and h is not None:
@@ -52,4 +62,3 @@ class CLine(CVisualObject):
     
     def SetColor(self, color):
         self.color = color
-        self.color_obj = gtk.gdk.color_parse(color)

@@ -14,6 +14,14 @@ class CPadding(CSimpleContainer):
     def GetWidth(self, element):
         return CSimpleContainer.GetWidth(self, element) + 2*self.padding
 
+    def PaintShadow(self, x, y, element, color, w = None, h = None):
+        if w is None:
+            w = self.GetWidth(element)
+        if h is None:
+            h = self.GetHeight(element)
+        CSimpleContainer.PaintShadow(self, x+self.padding, y+self.padding, element, color,
+                                    w - 2*self.padding, h - 2*self.padding)
+
     def Paint(self, x, y, element, w = None, h = None):
         if w is None:
             w = self.GetWidth(element)

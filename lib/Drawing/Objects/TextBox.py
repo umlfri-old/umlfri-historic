@@ -40,6 +40,16 @@ class CTextBox(CVisualObject):
         layout.set_text(txt)
         return int(layout.get_size()[0]/float(pango.SCALE))
 
+    def PaintShadow(self, x, y, element, color, w = None, h = None):
+        txt = self.__GetValue(element)
+        wgt = element.GetDrawingArea().GetDrawable()
+        cmap = wgt.get_colormap()
+        gc = wgt.new_gc(foreground = cmap.alloc_color(color))
+        
+        ctx, layout = element.GetDrawingArea().GetPango()
+        layout.set_text(txt)
+        wgt.draw_layout(gc, x=x, y=y, layout=layout)
+
     def Paint(self, x, y, element, w = None, h = None):
         txt = self.__GetValue(element)
         wgt = element.GetDrawingArea().GetDrawable()

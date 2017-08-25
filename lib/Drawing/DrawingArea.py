@@ -11,6 +11,7 @@ class CDrawingArea:
         self.elements = []
         self.elementsreverse = []
         self.connections = []
+        self.selected = set()
         
         if drawable is None:
             self.drawable = self.widget.window
@@ -23,12 +24,63 @@ class CDrawingArea:
             self.elementsreverse.insert(0, element)
         else:
             raise UMLException("ElementAlreadyExists")
-        
+     
+    def GetSelected(self):
+        for i in self.selected:
+            yield i     
+            
     def AddConnection(self, connection):
         if connection not in self.connections:
             self.connections.append(connection)
         else:
             raise UMLException("ConnectionAlreadyExists")
+            
+    def SelectedCount(self):
+        return len(self.selected)
+    
+    def AddToSelection(self, element):
+        self.selected.add(element)
+        element.Select()
+    
+    def RemoveFromSelection(self, element):
+        self.selected.remove(element)
+        element.Deselect()
+    
+    def DeselectAll(self):
+        for e in self.selected:
+            e.Deselect()
+        self.selected = set()
+            
+    def SelectAll(self):
+        for e in self.elements:
+            self.selected.add(e)
+            e.Select()
+        
+        for c in self.connections:
+            self.selected.add(c)
+            c.Select()
+    
+    def GetSelectSquare(self):
+        x1, y1 = self.GetSize()
+        x2, y2 = 0, 0
+        
+        for el in self.selected:
+            x, y = el.GetPosition()
+            w, h = el.GetSize()
+            if x < x1:
+                x1 = x
+            if y < y1:
+                y1 = y
+            if x + w > x2:
+                x2 = x + w
+            if y + h > y2:
+                y2 = y + h
+        return (x1, y1), (x2 - x1, y2 - y1)
+    
+    def MoveSelection(self, deltax, deltay):
+        for el in self.selected:
+            x, y = el.GetPosition()
+            el.SetPosition(x + deltax, y + deltay)
         
     def DeleteElement(self, element):
         if element in self.elements:
@@ -67,6 +119,8 @@ class CDrawingArea:
         return self.pango
 
     def Paint(self):
+        gc = self.widget.get_style().white_gc
+        self.drawable.draw_rectangle(gc, True, 0, 0, *self.GetSize())
         for e in self.elements:
             e.Paint()
         
