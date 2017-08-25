@@ -11,6 +11,7 @@
             <Option value="private" />
             <Option value="protected" />
         </Item>
+        <Item value="Notes" type="note" />
     </Attributes>
     <Appearance>
         <Shadow padding="3" color="#505050">

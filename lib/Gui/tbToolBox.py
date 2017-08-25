@@ -12,24 +12,25 @@ class CtbToolBox(CWidget):
     
     def Init(self):
         self.Selected = None
+        
+        self.tooltips = gtk.Tooltips()
+        
         pixbuf = pixbuf_new_from_file(ARROW_IMAGE)
         newIconWidget = gtk.Image()
         newIconWidget.set_from_pixbuf(pixbuf)
         newIconWidget.show()
         self.ArrowButton = self.tbToolBox.get_nth_item(0)
-        self.ArrowButton.set_label(None)
-        self.ArrowButton.set_label_widget(gtk.HBox())
         self.ArrowButton.connect("toggled", self.on_tbArrowBtn_toggled)
         self.ArrowButton.set_icon_widget(newIconWidget)
+        self.ArrowButton.set_tooltip(self.tooltips, "Selection tool")
         
     def __InsertButton(self, Type, TypeDesc, Group):
         newIconWidget = gtk.Image()
         newIconWidget.set_from_pixbuf(Type.GetIcon())
         newIconWidget.show()
         newButton = gtk.RadioToolButton(Group, None)
-        newButton.set_label(None)
-        newButton.set_label_widget(gtk.HBox())
         newButton.set_icon_widget(newIconWidget)
+        newButton.set_tooltip(self.tooltips, Type.GetId())
         newButton.connect("toggled", self.on_tbButton_toggled, Type.GetId(), TypeDesc)
         newButton.show()
         self.tbToolBox.insert(newButton, -1)

@@ -28,17 +28,12 @@ class CpicDrawingArea(CWidget):
     dnd = False
     
     def Init(self):
-        #self.picEventBox.drag_source_set(gtk.gdk.BUTTON1_MASK, targets, gtk.gdk.ACTION_MOVE)
         self.picEventBox.drag_dest_set(gtk.DEST_DEFAULT_ALL, targets, gtk.gdk.ACTION_MOVE)
         self.Buffer = gtk.gdk.Pixmap(self.picDrawingArea.window, 1000, 1000)
         self.DrawingArea = CDrawingArea(self.picDrawingArea, self.Buffer)
-        #self.picVBar.set_property('fixed_slider_length', False)
-        #self.picHBar.set_property('fixed_slider_length', False)
         
         self.AdjustScrollBars()
         self.Paint()
-        #tmp = (1,2,3), (10,3,5)
-        #tmp = [max(i) for i in zip(*tmp)]
         
         
     def GetDrawingArea(self):
@@ -125,11 +120,9 @@ class CpicDrawingArea(CWidget):
             
         elif toolBtnSel[0] == 'Connection':
             pass
-            """
-            ConnectionType = self.application.ConnectionFactory.GetConnection(self.tbToolBox.toolBtnSel[0])
-            ConnectionObject = CConnectionObject(ConnectionType)
-            CConnection(self.DrawingArea, ConnectionObject).SetPosition(posx, posy)
-            """
+            #ConnectionType = self.application.ConnectionFactory.GetConnection(self.tbToolBox.toolBtnSel[0])
+            #ConnectionObject = CConnectionObject(ConnectionType)
+            #CConnection(self.DrawingArea, ConnectionObject).SetPosition(posx, posy)
         
     def on_picDrawingArea_configure_event(self, widget, tmp):
         self.Repaint()
@@ -188,10 +181,6 @@ class CpicDrawingArea(CWidget):
         selx, sely = self.DragRect[1]
         sizx, sizy = sizx - selx, sizy - sely
         tmpx, tmpy = self.GetAbsolutePos(x,y)
-        #print tmpx, tmpy,
-        #tmpx = min(max(0, tmpx), sizx)
-        #tmpy = min(max(0, tmpy), sizy)
-        #print tmpx, tmpy
         dx, dy = tmpx - self.DragStartPos[0], tmpy - self.DragStartPos[1]
         posx, posy = self.DragRect[0]
         tmpx, tmpy = posx + dx, posy + dy

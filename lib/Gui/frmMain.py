@@ -7,6 +7,7 @@ from twProjectView import CtwProjectView
 from mnuItems import CmnuItems
 from picDrawingArea import CpicDrawingArea
 from lwProperties import ClwProperties
+from txtNotes import CtxtNotes
 
 class CfrmMain(common.CWindow):
     name = 'frmMain'
@@ -17,7 +18,8 @@ class CfrmMain(common.CWindow):
         'twProjectView': CtwProjectView,
         'mnuItems': CmnuItems,
         'picDrawingArea': CpicDrawingArea, 
-        'lwProperties': ClwProperties
+        'lwProperties': ClwProperties,
+        'txtNotes': CtxtNotes,
         }
     
     def Init(self):
@@ -27,7 +29,8 @@ class CfrmMain(common.CWindow):
         self.picDrawingArea.connect('selected_item', self.on_picDrawingArea_selected_item)
         self.lwProperties.connect('content_update', self.on_lwProperties_content_update)
         self.mnuItems.LoadDiagramsMenu()
-    
+        
+        self.form.maximize()
     
     # ** Main menu **
     # File
@@ -75,7 +78,9 @@ class CfrmMain(common.CWindow):
         
     # Help
     def on_mnuAbout_activate(self, mnu):
-        self.application.GetWindow('frmAbout').Show()
+        tmp = self.application.GetWindow('frmAbout')
+        tmp.SetParent(self)
+        tmp.Show()
         
     # Actions
     def ActionQuit(self, widget):
@@ -102,6 +107,8 @@ class CfrmMain(common.CWindow):
         
     def on_picDrawingArea_selected_item(self, widget, selected):
         self.lwProperties.Fill(selected)
+        self.txtNotes.Fill(selected)
         
-    def on_lwProperties_content_update(self, widget):
-        self.picDrawingArea.Paint()
+    def on_lwProperties_content_update(self, widget, element, property):
+        if element.GetObject().GetType().HasVisualAttribute(property):
+            self.picDrawingArea.Paint()

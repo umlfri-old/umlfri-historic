@@ -53,13 +53,24 @@ class CfrmAttribute(common.CWindow):
         else:
             self.cbAtrConst.set_active(False)
         
-        res = False
-        if self.form.run() == gtk.RESPONSE_OK:
+        while True:
+            response = self.form.run()
+            if response != gtk.RESPONSE_OK:
+                break
+            if self.edAtrName.get_text().strip() != '' and \
+                    self.cboxAtrType.child.get_text().strip() != '':
+                break
+            msg = gtk.MessageDialog(message_format = "Fill the name and type fields", parent = self.form, type = gtk.MESSAGE_ERROR,
+                    buttons = gtk.BUTTONS_OK)
+            msg.run()
+            msg.destroy()
+        ret = False
+        if response == gtk.RESPONSE_OK:
             attribute['name'] = self.edAtrName.get_text()
-            attribute['type'] = self.cboxAtrType.get_text_column()
+            attribute['type'] = self.cboxAtrType.child.get_text()
             attribute['scope'] = ['public', 'private', 'protected'][self.cboxAtrScope.get_active()]
-            attribute['stereotype'] = self.cboxAtrStereotype.get_text_column()
-            attribute['containment'] = self.cboxAtrContainment.get_text_column()
+            attribute['stereotype'] = self.cboxAtrStereotype.child.get_text()
+            attribute['containment'] = self.cboxAtrContainment.child.get_text()
             attribute['initial'] = self.edAtrInitial.get_text()
             buf = self.txtAtrDocumentation.get_buffer()
             attribute['doc'] = buf.get_text(buf.get_start_iter(), buf.get_end_iter())
@@ -67,6 +78,6 @@ class CfrmAttribute(common.CWindow):
             attribute['static'] = self.cbAtrStatic.get_active()
             attribute['property'] = self.cbAtrProperty.get_active()
             attribute['const'] = self.cbAtrStatic.get_active()
-            res = True
+            ret = True
         self.Hide()
-        return res
+        return ret

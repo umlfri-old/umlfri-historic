@@ -11,11 +11,10 @@ class ClwProperties(CWidget):
     
     __gsignals__ = {
         'content_update':  (gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, 
-            ()),      
+            (gobject.TYPE_PYOBJECT, gobject.TYPE_STRING)),      
     }
     
     def Init(self):
-
         self.listStore = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gobject.TYPE_BOOLEAN, gtk.TreeModel, gobject.TYPE_STRING)
         self.StrRenderer = gtk.CellRendererText()
         
@@ -59,14 +58,14 @@ class ClwProperties(CWidget):
         
     
     def Fill(self, Element):
-        
         self.element = Element
         self.listStore.clear()
         if Element is  None:
             return
         attrs = Element.GetObject().GetAttributes()
         type = Element.GetObject().GetType()
-        for k, v in attrs.items():
+        for k in type.GetAttributes(): # attrs.items():
+            v = attrs[k]
             row = self.listStore.append()
             atrtype = type.GetAttribute(k)
             if atrtype[0] == 'bool':
@@ -81,6 +80,8 @@ class ClwProperties(CWidget):
                 self.listStore.set(row, ID_NAME, str(k), ID_VALUE, str(v), ID_TEXT_VISIBLE, False, ID_COMBO_VISIBLE, True, ID_BUTTON_VISIBLE, False, ID_EDITABLE, True, ID_MODEL, model)
             elif atrtype[0] == 'str':
                 self.listStore.set(row, ID_TYPE, atrtype[0], ID_NAME, str(k), ID_VALUE, str(v), ID_TEXT_VISIBLE, True, ID_COMBO_VISIBLE, False, ID_BUTTON_VISIBLE, False, ID_EDITABLE, True)
+            elif atrtype[0] == 'note':
+                pass
             else:
                 self.listStore.set(row, ID_TYPE, atrtype[0], ID_NAME, str(k), ID_TEXT_VISIBLE, False, ID_COMBO_VISIBLE, False, ID_BUTTON_VISIBLE, True)
     
@@ -94,26 +95,27 @@ class ClwProperties(CWidget):
         model.set(iter, ID_VALUE, new_value) 
         name, = model.get(iter, ID_NAME)
         self.element.GetObject().SetAttribute(name ,new_value)
-        self.emit('content_update')
+        self.emit('content_update', self.element, name)
         
     def on_change_combo(self, cellrenderer, path, new_value):
         model = self.lwProperties.get_model()
         iter = model.get_iter_from_string(path)
-        model.set(iter, ID_VALUE, new_value) 
+        model.set(iter, ID_VALUE, new_value)
         name, = model.get(iter, ID_NAME)
         self.element.GetObject().SetAttribute(name ,new_value)
-        self.emit('content_update')
+        self.emit('content_update', self.element, name)
     
     def on_change_button(self, cellrenderer, path):
         model = self.lwProperties.get_model()
         iter = model.get_iter_from_string(path)
-        type, = model.get(iter, ID_TYPE)
+        type, name = model.get(iter, ID_TYPE, ID_NAME)
         if type == 'attrs':
-            self.application.GetWindow('frmProperties').ShowProperties('attrs',self.element)
+            tmp = self.application.GetWindow('frmProperties')
+            tmp.SetParent(self.application.GetWindow('frmMain'))
+            if tmp.ShowProperties('attrs',self.element):
+                self.emit('content_update', self.element, name)
         elif type == 'opers':
-            self.application.GetWindow('frmProperties').ShowProperties('opers',self.element)
-        
-        
-        
-        
-    
+            tmp = self.application.GetWindow('frmProperties')
+            tmp.SetParent(self.application.GetWindow('frmMain'))
+            if tmp.ShowProperties('opers',self.element):
+                self.emit('content_update', self.element, name)

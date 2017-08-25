@@ -48,7 +48,7 @@ class CElementObject:
         val = self.attribs[attr]
         if type[0] == 'attrs':
             v = []
-            for i in val:
+            for vi in val:
                 s = ''
                 o = {}
                 if vi['scope'] == 'private':
@@ -67,7 +67,7 @@ class CElementObject:
             val = v
         elif type[0] == 'opers':
             v = []
-            for i in val:
+            for vi in val:
                 s = ''
                 o = {}
                 if vi['scope'] == 'private':
@@ -77,8 +77,10 @@ class CElementObject:
                 elif vi['scope'] == 'protected':
                     o['scope'] = '#'
                 l = vi['name']
+                l += "("
                 if 'parameters' in vi and vi['parameters']:
-                    l += "("+vi['parameters']+")"
+                    l += vi['parameters']
+                l += ")"
                 if 'type' in vi and vi['type']:
                     l += ": "+vi['type']
                 o['line'] = l
@@ -94,6 +96,9 @@ class CElementObject:
             del self.attribs[key]
         else:
             raise UMLException("KeyError")
+    
+    def HasAttribute(self, key):
+        return key in self.attribs
             
     def SetAttribute(self, key, value):
         self.attribs[key] = value

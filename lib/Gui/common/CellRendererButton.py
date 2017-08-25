@@ -48,7 +48,10 @@ class CellRendererButton(gtk.GenericCellRenderer):
             window.draw_layout(widget.style.text_gc[0], x, y, layout)
 
     def on_get_size(self, widget, cell_area=None):
-        return (0, 0, self.width, 18)
+        if cell_area is None:
+            return (0, 0, self.width, 18)
+        else:
+            return (cell_area.x, cell_area.y, cell_area.width, cell_area.height)
     
     def on_start_editing(self, event, widget, path, background_area, cell_area, flags):
         x = cell_area.x + cell_area.width - self.width

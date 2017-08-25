@@ -82,13 +82,13 @@ class CConnection:
             C = Xo*i[1] - i[0] * Yo
             T = (-B*Xo + A*Yo - A*y + B*x)/(A**2 + B**2)
             if T < 0:
-                if sqrt((Xo - x)**2 + (Yo - y)**2) <=3:
+                if sqrt((Xo - x)**2 + (Yo - y)**2) <=2:
                     return True
             elif T > 1:
-                if sqrt((i[0] - x)**2 + (i[1] - y)**2) <=3:
+                if sqrt((i[0] - x)**2 + (i[1] - y)**2) <=2:
                     return True
             else:
-                if abs((abs(A*x + B*y + C))/sqrt(A**2 + B**2)) <=3:
+                if abs((abs(A*x + B*y + C))/sqrt(A**2 + B**2)) <=2:
                     return True
             Xo, Yo = i
         else:

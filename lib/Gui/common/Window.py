@@ -20,6 +20,9 @@ class CWindow:
     def Hide(self):
         self.form.hide()
     
+    def SetParent(self, win):
+        self.form.set_transient_for(win.form)
+    
     def __on_delete_event(self, win, event):
         win.hide()
         return True

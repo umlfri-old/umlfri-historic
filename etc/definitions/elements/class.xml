@@ -14,6 +14,7 @@
         <Item value="Attributes" type="attrs" propid="attributes" />
         <Item value="Operations" type="opers" propid="operations" />
         <Item value="Abstract" type="bool" />
+        <Item value="Notes" type="note" />
     </Attributes>
     <Appearance>
         <Shadow padding="3" color="#505050">

@@ -26,8 +26,8 @@ draare = lib.Drawing.CDrawingArea(tmp)
 cls = elfs.GetElement("Class")
 element = lib.Elements.CElementObject(cls)
 element.SetAttribute("Name", "hihiaaaaaaaa")
-element.SetAttribute("Attributes", [{'type':'+', 'line': "123"}, {'type':'-', 'line': "456"}])
-element.SetAttribute("Operations", [])
+element.SetAttribute("Attributes", [{'scope':'private', 'name': "aaa"}, {'scope':'public', 'name': "ahoj"}])
+element.SetAttribute("Operations", [{'scope':'private', 'name': "aaa"}, {'scope':'public', 'name': "ahoj"}])
 element.SetAttribute("Abstract", False)
 element.SetAttribute("Scope", "public")
 
@@ -41,7 +41,7 @@ element = lib.Elements.CElementObject(cls)
 element.SetAttribute("Name", "hihiaaaaaaaa")
 
 pack = lib.Drawing.CElement(draare, element)
-pack.SetPosition(200, 200)
+pack.SetPosition(180, 180)
 
 #############
 ## Create associatoin

@@ -14,8 +14,8 @@ class CfrmOperation(common.CWindow):
         else:
             self.edOprName.set_text("")
 
-        if 'parameters' in operation:
-            self.edOprParameters.set_text(operation['parameters'])
+        if 'params' in operation:
+            self.edOprParameters.set_text(operation['params'])
         else:
             self.edOprParameters.set_text("")
         
@@ -54,10 +54,10 @@ class CfrmOperation(common.CWindow):
         else:
             self.cbOprIsQuery.set_active(0)
             
-        if 'returntype' in operation:
-            self.cboxOprReturnType.set_text_column(operation['returntype'])
+        if 'type' in operation:
+            self.cboxOprReturnType.child.set_text(operation['type'])
         else:
-            self.cboxOprReturnType.set_text_column("")
+            self.cboxOprReturnType.child.set_text("")
         
         if 'scope' in operation:
             self.cboxOprScope.set_active({'public':0, 'private':1, 'protected':2}[operation['scope']])
@@ -65,18 +65,30 @@ class CfrmOperation(common.CWindow):
             self.cboxOprScope.set_active(0)
         
         if 'stereotype' in operation:
-            self.cboxOprStereotype.set_text_column(operation['stereotype'])
+            self.cboxOprStereotype.child.set_text(operation['stereotype'])
         else:
-            self.cboxOprStereotype.set_text_column("")
+            self.cboxOprStereotype.child.set_text("")
     
         if 'documentation' in operation:
             self.txtOprDocumentation.get_buffer().set_text(operation['documentation'])
         else:
             self.txtOprDocumentation.get_buffer().set_text("")
-          
-        if self.form.run() == gtk.RESPONSE_OK:
+        
+        while True:
+            response = self.form.run()
+            if response != gtk.RESPONSE_OK:
+                break
+            if self.edOprName.get_text().strip() != '' and \
+                    self.cboxOprReturnType.child.get_text().strip() != '':
+                break
+            msg = gtk.MessageDialog(message_format = "Fill the name and type fields", parent = self.form, type = gtk.MESSAGE_ERROR,
+                    buttons = gtk.BUTTONS_OK)
+            msg.run()
+            msg.destroy()
+        ret = False
+        if response == gtk.RESPONSE_OK:
             operation['name'] = self.edOprName.get_text()
-            operation['parameters'] = self.edOprParameters.get_text()
+            operation['params'] = self.edOprParameters.get_text()
             operation['abstract'] = self.cbOprAbstract.get_active()
             operation['static'] = self.cbOprStatic.get_active()
             operation['const'] = self.cbOprConst.get_active()
@@ -85,9 +97,11 @@ class CfrmOperation(common.CWindow):
             operation['synchronize'] = self.cbOprSynchronize.get_active()
             operation['isquery'] = self.cbOprIsQuery.get_active()
             operation['scope'] = ['public', 'private', 'protected'][self.cboxOprScope.get_active()]
-            operation['returntype'] = self.cboxOprReturnType.get_text_column()
-            operation['stereotype'] = self.cboxOprStereotype.get_text_column()
+            operation['type'] = self.cboxOprReturnType.child.get_text()
+            operation['stereotype'] = self.cboxOprStereotype.child.get_text()
             buf = self.txtOprDocumentation.get_buffer()
             operation['documentation'] = buf.get_text(buf.get_start_iter(), buf.get_end_iter())
+            
+            ret = True
         self.Hide()      
-        
+        return ret

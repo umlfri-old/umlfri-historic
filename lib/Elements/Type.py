@@ -9,11 +9,13 @@ class CElementType:
         self.connections = {}
         self.appearance = None
         self.visAttrs = {}
+        self.attributeList = []
     
     def AppendAttribute(self, value, type, propid = None, options = []):
         if propid is not None:
             self.visAttrs[propid] = value
         self.attributes[value] = (type, options)
+        self.attributeList.append(value)
     
     def AppendConnection(self, value, with, allowrecursive):
         self.connections[value] = (with, allowrecursive)
@@ -56,13 +58,18 @@ class CElementType:
                 return ""
             else:
                 return str(temp)
+        elif type == 'note':
+            if temp is None:
+                return ""
+            else:
+                return str(temp)
         elif type == 'attrs':
             return []
         elif type == 'opers':
             return []
     
     def GetAttributes(self):
-        for i in self.attributes:
+        for i in self.attributeList:
             yield i
             
     def GetAttribute(self, key):
@@ -80,6 +87,9 @@ class CElementType:
     
     def SetId(self, id):
         self.id = id
+    
+    def HasVisualAttribute(self, id):
+        return id in self.visAttrs.itervalues()
     
     def GetVisAttr(self, id):
         if id in self.visAttrs:

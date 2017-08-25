@@ -12,8 +12,8 @@
             <Option value="protected" />
          </Item>
         <Item value="Attributes" type="attrs" propid="attributes" />
-        <Item value="Operations" type="opers" propid="operations" />
         <Item value="Abstract" type="bool" />
+        <Item value="Notes" type="note" />
     </Attributes>
     <Appearance>
         <Shadow padding="3" color="#505050">
@@ -22,7 +22,7 @@
                     <Padding padding="5">
                         <TextBox align="center" text="#name" color="yellow" />
                     </Padding>
-                    <Condition condition="operations" type="empty" negate="1">
+                    <Condition condition="attributes" type="empty" negate="1">
                         <HBox>
                             <Line type="horizontal" />
                             <Padding padding="5">
