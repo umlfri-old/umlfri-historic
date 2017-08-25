@@ -1,0 +1,61 @@
+#!/bin/bash
+
+
+######## Configuration #######
+export USERS="janik miroslav palino frizi"
+export NO_COUNT="doc yapps*.py"
+export EXTENSIONS="py g"
+export GENERATORS="g"
+export BINARIES="csql csql_test csql_idx"
+#### End of Configuration ####
+
+LCa=0
+WCa=0
+CCa=0
+
+function no_cnt() {
+	if [ "$NO_COUNT" ]; then
+		TMP=${NO_COUNT// /|}
+        TMP=${TMP//\?/[^/]}
+		grep -v -E "/(${TMP//\*/[^/]*})(/.*)?$";
+	else
+		cat
+	fi
+}
+
+function format() {
+    echo "${i:1}"
+}
+echo "+----------------------------------------------------+---------+---------+---------+"
+for user in $USERS; do
+# 	echo "+----------------------------------------------------+---------+---------+---------+"
+	printf "| %35s%15s | %7s | %7s | %7s |\n" "Uzivatel:" "$user" "Riadkov" "Slov " "Znakov"
+	LC=0
+	WC=0
+	CC=0
+	
+	echo "+----------------------------------------------------+---------+---------+---------+"
+	for i in `find -user $user | grep -E "^((.*/(${BINARIES// /|}))|(.*\.(${EXTENSIONS// /|})))$" | no_cnt`; do
+		for g in $GENERATORS; do
+			if [ -e "${i//.py/}.$g" ]; then
+				continue 2
+			fi;
+		done
+		read LCx WCx CCx <<< `cat "$i" | grep -v -E "^[ \t]*#" | grep -v -E "^[ \t]*$" | wc`
+		let LC=$LC+$LCx
+		let WC=$WC+$WCx
+		let CC=$CC+$CCx
+		printf "| %-50s | %7d | %7d | %7d |\n" "`format "$i"`" $LCx $WCx $CCx
+	done
+	
+	echo "+----------------------------------------------------+---------+---------+---------+"
+	let LCa=$LCa+$LC
+	let WCa=$WCa+$WC
+	let CCa=$CCa+$CC
+	printf "| %50s | %7d | %7d | %7d |\n" "Spolu:" $LC $WC $CC
+	echo "+==================================================================================+"
+done
+
+# echo "+==================================================================================+"
+printf "| %50s | %7d | %7d | %7d |\n" "Vsetci:" $LCa $WCa $CCa
+echo "+----------------------------------------------------+---------+---------+---------+"
